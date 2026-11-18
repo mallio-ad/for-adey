@@ -101,6 +101,10 @@ h1 .pink{color:var(--pink3)}
 @keyframes nudge{50%{transform:translateY(3px)}}
 #choices{display:flex;gap:22px;margin-top:16px;align-items:center;flex-wrap:wrap}
 #yes{transform-origin:left center;transition:transform .2s steps(3)}
+@media (max-width:440px){
+  #choices{gap:12px}
+  #choices .btn{font-size:10px;padding:12px 10px}
+}
 #no.run{position:fixed;z-index:60;transition:left .18s steps(3), top .18s steps(3)}
 #end{text-align:center}
 .theend{font-family:'Press Start 2P',monospace;font-size:clamp(18px,4vw,26px);color:var(--pink2);margin-bottom:12px}
@@ -149,12 +153,12 @@ h1 .pink{color:var(--pink3)}
   <div class="title-wrap">
     <p class="kicker">ADEY SAYANG, THIS ONE'S FOR YOU</p>
     <h1>OPERATION:<br>MAKE YOU<br><span class="pink">SMILE AGAIN</span></h1>
-    <p class="sub">a tiny game made by a very sorry (and now very awake) boyfriend</p>
+    <p class="sub">a tiny game made by a very sorry boyfriend</p>
 
     <div class="px song">
       <div class="track" style="margin-bottom:0">
         <div class="cover"><svg class="i"><use href="#i-note"/></svg></div>
-        <div><b>Sound on, please</b><small>I made a little song just for you</small></div>
+        <div><b>sound on, please</b><small>i made a little song just for you</small></div>
       </div>
     </div>
     <button class="btn big blink" id="start">PRESS START</button>
@@ -169,7 +173,7 @@ h1 .pink{color:var(--pink3)}
 <div id="hint" hidden></div>
 
 <div id="dialog" class="px box" hidden>
-  <div class="nametag" id="nametag">ME</div>
+  <div class="nametag" id="nametag">io</div>
   <p id="text"></p>
   <div id="choices" hidden>
     <button class="btn" id="yes" type="button">YES</button>
@@ -181,7 +185,7 @@ h1 .pink{color:var(--pink3)}
 <div id="end" class="px box" hidden>
   <p class="theend">THE END</p>
   <p class="endsub">of the fight. not of us.</p>
-  <p class="ps">P.S. Movie night, tonight. I'll be right there with you, wide awake.</p>
+  <p class="ps">P.S. movie night, tonight. i'll be right there with you, wide awake.</p>
   <div class="row">
     <button class="btn" id="again" type="button"><svg class="i"><use href="#i-heart"/></svg>PLAY AGAIN</button>
   </div>
@@ -195,7 +199,7 @@ h1 .pink{color:var(--pink3)}
 
 /* ================= EDIT ME ================= */
 const CONFIG = {
-  fromName: 'ME',
+  fromName: 'io',
 };
 /* =========================================== */
 
@@ -863,13 +867,13 @@ function rosePhase(goal) {
 
 /* ---------- the question ---------- */
 const NO_LINES = [
-  "Are you sure, Adey sayang?",
-  "Like... really, really sure?",
-  "I'll sing you to sleep on call. Badly, but with feelings.",
-  "I'll watch any movie you want. Even the really long ones.",
-  "I'll drink three coffees before every movie night. Maybe four.",
-  "You're breaking my tiny pixel heart.",
-  "Okay, the NO button fell asleep too. Looks like there's only one answer left.",
+  "are you sure, adey sayang?",
+  "like... really, really sure?",
+  "i'll reply to your texts in 0.2 seconds. even when i'm busy.",
+  "i'll watch any movie you want. even the really long ones.",
+  "i'll listen to you vent for hours. even if it's just a long rant about random things.",
+  "you're breaking my tiny pixel heart :(",
+  "okay, the NO button fell asleep too. looks like there's only one answer left.",
 ];
 const NO_LABELS = ["NOPE", "STILL NO", "HMM... NO", "NAH", "N-NO?", "...NO?"];
 let noCount = 0, lastDodge = 0;
@@ -878,7 +882,7 @@ function resetNo() {
   homeNo();
   noCount = 0; noBtn.classList.remove('run'); noBtn.classList.add('alt');
   noBtn.style.left = noBtn.style.top = noBtn.style.marginLeft = ''; noBtn.textContent = 'NO'; noBtn.dataset.yes = '';
-  yesBtn.style.transform = '';
+  yesBtn.style.transform = yesBtn.style.fontSize = yesBtn.style.padding = '';
 }
 function dodgeNo() {
   const r = noBtn.getBoundingClientRect();
@@ -899,12 +903,13 @@ function onNo(e) {
   if (e) e.preventDefault();
   noCount++; S.boyExpr = 'sad'; sfx.no();
   typeText(NO_LINES[Math.min(noCount - 1, NO_LINES.length - 1)]);
-  yesBtn.style.transform = `scale(${Math.min(1.85, 1 + noCount * .13)})`;
+  const grow = Math.min(noCount, 5);
+  yesBtn.style.fontSize = (11 + grow) + 'px';
+  yesBtn.style.padding = (12 + grow * 1.5) + 'px ' + (14 + grow * 2) + 'px';
   if (noCount >= NO_LINES.length) {
     homeNo();
     noBtn.classList.remove('run', 'alt'); noBtn.style.left = noBtn.style.top = '';
     noBtn.innerHTML = 'YES <svg class="i"><use href="#i-heart"/></svg>'; noBtn.dataset.yes = '1';
-    noBtn.style.marginLeft = Math.ceil(yesBtn.offsetWidth * (Math.min(1.85, 1 + noCount * .13) - 1)) + 'px';
     return;
   }
   noBtn.textContent = NO_LABELS[noCount - 1];
@@ -954,31 +959,31 @@ async function story() {
   await sleep(600);
   await walkBoy(-18, 1700);
 
-  await say("Adey sayang... hi. Yes, you. The cutest grumpy face I know.");
-  await say("So... about last night.");
-  await say("We were supposed to watch a movie together. You went to take a shower, and I said I'd wait for you.");
+  await say("adey sayang... hey. yes, you. the cutest grumpy face i know.");
+  await say("so... about last night.");
+  await say("we were supposed to watch a movie together. you went to take a shower, and i said i'd wait for you.");
   S.zzz = true; S.boyExpr = 'sleep';
-  await say("And then I... fell asleep. Yeah. That really happened.");
+  await say("and then i... fell asleep. yeah. that really happened.");
   S.zzz = false; S.boyExpr = 'sad';
-  await say("You were so excited to spend time with me, and I wasn't awake when you came back. I get why you're upset.");
-  await say("It's not because I didn't care. I wanted that night with you too. I'm really, really sorry, Adey sayang.");
-  await say("A sorry over text didn't feel like enough... so I built you a tiny world instead.");
-  await say("First things first. See that grumpy little storm cloud over your head?");
-  await say("Let's get rid of it. Tap it as many times as you need.");
+  await say("you were so excited to spend time with me, and i wasn't awake when you came back. i get why you're upset.");
+  await say("it's not because i didn't care. i wanted that night with you too. i'm really, really sorry, adey sayang.");
+  await say("a sorry over text didn't feel like enough... so i built you a tiny world instead.");
+  await say("first things first. see that grumpy little storm cloud over your head?");
+  await say("let's get rid of it. tap it as many times as you need.");
   await cloudPhase();
 
   S.boyExpr = 'neutral';
-  await say("There it is. The sky looks so much prettier when you're not frowning.");
-  await say("Okay, you might still be a little mad. That's fair. I'll keep going.");
-  await say("You deserve flowers. I can't hand them to you in person yet... so I grew some here.");
-  await say("Help me plant a few. Tap anywhere on the grass.");
+  await say("there it is. the sky looks so much prettier when you're not frowning.");
+  await say("okay, you might still be a little mad. that's fair. i'll keep going.");
+  await say("you deserve flowers. i can't hand them to you in person yet... so i grew some here.");
+  await say("help me plant a few. ketuk di mana pun area rumput yang kamu suka yaa sayang.");
   await rosePhase(5);
 
   S.boyExpr = 'smile';
-  await say("One rose for every minute I should've stayed awake for you... okay, I'd need a much bigger garden.");
-  await say("Thank you for being patient with me, even when I make it hard.");
-  await say("Next time you say \"wait for me\", I'll wait. Eyes open, call on. I promise.");
-  await ask("So... will you forgive me, Adey sayang?");
+  await say("one rose for every minute i should've stayed awake for you... okay, i'd need a much bigger garden.");
+  await say("thank you for being patient with me, even when i make it hard.");
+  await say("next time you say \"wait for me\", i'll wait. eyes open. i promise.");
+  await ask("so... will you forgive me, adey sayang?");
   await celebrate();
 }
 async function celebrate() {
@@ -991,18 +996,18 @@ async function celebrate() {
   S.celebrate = true; S.bigHeartAt = performance.now();
   burstHearts(girlX(), GY - 30, 10);
   await sleep(700);
-  await say("YOU SAID YES! Okay, I'm trying very hard to act cool right now.");
-  await say("Thank you for forgiving me, Adey sayang. I don't take it for granted. Not even a little bit.");
-  await say("Now let me make last night up to you.");
-  await askBoth("Movie night tonight? Just you and me. And this time, I won't fall asleep. Not even close.", "YES, TONIGHT!", "OBVIOUSLY");
+  await say("YOU SAID YES! okay, i'm trying very hard to act cool right now.");
+  await say("thank you for forgiving me, adey sayang. i don't take it for granted. not even a little bit.");
+  await say("now let me make last night up to you.");
+  await askBoth("movie night tonight? just you and me. and this time, i won't fall asleep. not even close.", "YES, TONIGHT!", "OBVIOUSLY");
   choices.hidden = true; resetNo();
   S.laptop = true; sfx.fanfare();
   burstHearts(boyX() + 6, GY - 24, 12);
   heartFirework(W / 2, GY * .3, '#ffd166');
   await sleep(500);
-  await say("It's a date! Eyes wide open the whole time, I promise.");
-  await say("I love you, Adey sayang. More than all the roses in this tiny world, and in the big one too.");
-  await say("See? Everything's coming up roses.");
+  await say("it's a date! eyes wide open the whole time, i promise.");
+  await say("i love you, adey sayang. more than all the roses in this tiny world, and in the big one too.");
+  await say("see? everything's coming up roses.");
   dialog.hidden = true; endEl.hidden = false; S.mode = 'end';
 }
 
