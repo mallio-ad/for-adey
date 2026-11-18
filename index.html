@@ -369,7 +369,7 @@ let stars = [], specks = [], tufts = [], jag = [], clouds = [], flies = [];
 function layout() {
   const vw = window.innerWidth, vh = window.innerHeight;
   P = clamp(Math.round(Math.min(vw, vh * 0.9) / 70), 3, 10);
-  W = Math.ceil(vw / P); H = Math.ceil(vh / P);
+  W = Math.max(20, Math.ceil(vw / P)); H = Math.max(20, Math.ceil(vh / P)); // never 0, even in a hidden/zero-size frame
   cv.width = W; cv.height = H;
   cv.style.width = (W * P) + 'px'; cv.style.height = (H * P) + 'px';
   const reserve = clamp(vh * 0.3, 150, 230);
@@ -821,7 +821,7 @@ function update(dt, now) {
 let last = performance.now();
 function frame(now) {
   const dt = Math.min(.05, (now - last) / 1000); last = now;
-  update(dt, now); draw(now);
+  try { update(dt, now); draw(now); } catch (e) { console.warn(e); } // one bad frame must never stop the animation
   requestAnimationFrame(frame);
 }
 
